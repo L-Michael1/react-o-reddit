@@ -60,8 +60,8 @@ const Post = ({ post, title }: PostProps) => {
                                 </div>
                         }
                     </p>
-                    <a className='card-link' href={`https://reddit.com${post.data.permalink}`}>{title}</a>
-                    <p className='card-text'>{post.data.author}</p>
+                    <a className='card-link' target='_blank' href={`https://reddit.com${post.data.permalink}`}>{title}</a>
+                    <p className='card-text'>By: {post.data.author}</p>
                 </div>
             </div>
         </div>

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-
+import Dropdown from 'react-bootstrap/Dropdown';
 interface FormProps {
-    handleSubmit: (e: any) => void
+    listing: string;
+    handleSubmit: (e: any) => void;
+    handleListing: (e: any) => void;
 }
 
-const Form = ({ handleSubmit }: FormProps) => {
+const Form = ({ handleSubmit, handleListing, listing }: FormProps) => {
 
     const [subreddit, setSubreddit] = useState('wallpapers')
 
@@ -22,6 +24,19 @@ const Form = ({ handleSubmit }: FormProps) => {
             <div className='row justify-content-md-center m-4'>
                 <form onSubmit={onSubmitHandler}>
                     <div className='form-row align-items-center'>
+                        <div className='col-md-13'>
+                            <Dropdown>
+                                <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                                    {listing}
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item onClick={() => handleListing('hot')}>hot</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => handleListing('new')}>new</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => handleListing('top')}>top</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => handleListing('rising')}>rising</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
                         <div className='col-md-13'>
                             <div className='input-group'>
                                 <div className="input-group-prepend">

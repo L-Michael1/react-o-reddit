@@ -94,7 +94,7 @@ const RedditContainer = () => {
     // Endpoint to fetch data in combination with user's chosen subreddit + listing type
     const API_ENDPOINT = `https://www.reddit.com/r/${subreddit}/${listing}.json`
 
-    // On mount and on url change, fetch data
+    // On mount and on subreddit change, fetch data
     const handleFetchPosts = useCallback(async () => {
         dispatchPosts({
             type: 'POSTS_FETCH_INIT'
@@ -115,17 +115,20 @@ const RedditContainer = () => {
             });
 
         } catch (err) {
-            console.log('why');
             console.error(err);
             dispatchPosts({
                 type: 'POSTS_FETCH_FAILED',
             })
         }
-    }, [subreddit]);
+    }, [listing, subreddit]);
 
     useEffect(() => {
         handleFetchPosts();
     }, [handleFetchPosts])
+
+    const handleListingChange = (listing: string) => {
+        setListing(listing);
+    }
 
     const handleSubmit = (sub: string) => {
         setSubreddit(sub);
@@ -137,7 +140,7 @@ const RedditContainer = () => {
         <div className="container">
             <Header subreddit={subredditHeader} />
             <hr />
-            <Form handleSubmit={handleSubmit} />
+            <Form listing={listing} handleSubmit={handleSubmit} handleListing={handleListingChange} />
             {console.log(posts.isError)}
             { posts.isLoading ?
                 <img className='rounded d-block mx-auto ' height='50%' src={loading} alt='loading' /> : posts.isError ?
