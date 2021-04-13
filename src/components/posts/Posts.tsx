@@ -2,6 +2,7 @@ import React from 'react';
 import Post from '../post/Post';
 
 type PostType = {
+    id: string;
     kind: string;
     data: {
         title: string;
@@ -20,11 +21,11 @@ const Posts = ({ posts }: PostsProps) => {
             <ul>
                 {posts.map((post) => {
                     return (
-                        <div>
+                        <li key={post.id}>
                             <Post
                                 title={post.data.title}
                             />
-                        </div>
+                        </li>
                     )
                 })}
             </ul>

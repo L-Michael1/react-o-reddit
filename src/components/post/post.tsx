@@ -7,9 +7,7 @@ interface PostProps {
 const Post = ({ title }: PostProps) => {
     return (
         <div>
-            <li>
-                {title}
-            </li>
+            {title}
         </div>
     )
 }

@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { uuid } from 'uuidv4';
+import React, { useState, useEffect, useCallback, useReducer } from 'react';
 import axios from 'axios'
+import { v4 as uuid_v4 } from "uuid";
 
 // Components
 import Header from '../header/Header'
 import Posts from '../posts/Posts';
 
 // Types/Interfaces
-
 type PostType = {
+    id: string;
     kind: string;
     data: {
         title: string;
@@ -17,22 +17,90 @@ type PostType = {
 
 type PostsType = Array<PostType>;
 
+type PostsState = {
+    data: PostsType;
+    isLoading: boolean;
+    isError: boolean;
+};
+
+interface PostsFetchInitAction {
+    type: 'POSTS_FETCH_INIT';
+}
+
+interface PostsFetchSuccessAction {
+    type: 'POSTS_FETCH_SUCCESS';
+    payload: PostsType;
+}
+
+interface PostsFetchFailedAction {
+    type: 'POSTS_FETCH_FAILED';
+}
+
+type PostsActions =
+    | PostsFetchInitAction
+    | PostsFetchSuccessAction
+    | PostsFetchFailedAction;
+
+const postsReducer = (state: PostsState, action: PostsActions) => {
+    switch (action.type) {
+        case 'POSTS_FETCH_INIT':
+            return {
+                ...state,
+                isLoading: true,
+                isError: false,
+            }
+        case 'POSTS_FETCH_SUCCESS':
+            return {
+                ...state,
+                isLoading: false,
+                isErorr: false,
+                data: action.payload,
+            }
+        case 'POSTS_FETCH_FAILED':
+            return {
+                ...state,
+                isLoading: false,
+                isErorr: true,
+            }
+        default:
+            return state;
+    }
+}
 
 const RedditContainer = () => {
 
-    const [posts, setPosts] = useState<PostsType>([]);
+    const [posts, dispatchPosts] = useReducer(
+        postsReducer,
+        { data: [], isLoading: false, isError: false }
+    );
 
     const [subreddit, setSubreddit] = useState('wallpapers/hot.json');
 
     const [url, setUrl] = useState(`https://www.reddit.com/r/${subreddit}`)
 
     const handleFetchPosts = useCallback(async () => {
+        dispatchPosts({
+            type: 'POSTS_FETCH_INIT'
+        })
         try {
             const result = await axios.get(url);
-            console.log(result.data.data.children)
-            setPosts(result.data.data.children);
+            const posts = result.data.data.children;
+
+            posts.forEach((post: PostType) => {
+                post.id = uuid_v4();
+            })
+
+            console.log(posts)
+            dispatchPosts({
+                type: 'POSTS_FETCH_SUCCESS',
+                payload: posts
+            });
+
         } catch (err) {
             console.error(err);
+            dispatchPosts({
+                type: 'POSTS_FETCH_FAILED',
+            })
         }
     }, [url]);
 
@@ -51,7 +119,7 @@ const RedditContainer = () => {
     return (
         <div>
             <Header />
-            <Posts posts={posts} />
+            {posts.isLoading ? <p>Loading...</p> : <Posts posts={posts.data} />}
         </div>
     )
 }
