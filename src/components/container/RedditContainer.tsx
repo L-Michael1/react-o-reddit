@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useCallback, useReducer } from 'react';
 import { v4 as uuid_v4 } from "uuid";
-import axios from 'axios'
-import './RedditContainer.css'
+import axios from 'axios';
+import './RedditContainer.css';
 
 // Components
 import Header from '../header/Header'
 import Posts from '../posts/Posts';
-import Form from '../form/Form'
+import Form from '../form/Form';
+import Footer from '../footer/Footer';
+import errorReddit from '../../assets/errorReddit.png';
+import loading from '../../assets/loading.png';
 
 // Types/Interfaces
 type PostType = {
@@ -61,14 +64,14 @@ const postsReducer = (state: PostsState, action: PostsActions) => {
             return {
                 ...state,
                 isLoading: false,
-                isErorr: false,
+                isError: false,
                 data: action.payload,
             }
         case 'POSTS_FETCH_FAILED':
             return {
                 ...state,
                 isLoading: false,
-                isErorr: true,
+                isError: true,
             }
         default:
             return state;
@@ -135,7 +138,14 @@ const RedditContainer = () => {
             <Header subreddit={subredditHeader} />
             <hr />
             <Form handleSubmit={handleSubmit} />
-            { posts.isLoading ? <p>Loading...</p> : <Posts posts={posts.data} />}
+            {console.log(posts.isError)}
+            { posts.isLoading ?
+                <img className='rounded d-block mx-auto ' height='50%' src={loading} alt='loading' /> : posts.isError ?
+                    <img className='rounded d-block mx-auto ' src={errorReddit} alt='error' /> :
+                    posts.data.length === 0 ? <h1 className='d-flex justify-content-center'>No posts...</h1> :
+                        <Posts posts={posts.data} />
+            }
+            <Footer />
         </div >
     )
 }
