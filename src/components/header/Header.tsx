@@ -3,7 +3,7 @@ import React from 'react';
 const Header = () => {
     return (
         <div>
-            <h1>react-o-reddit</h1>
+            <h1>React-O-Reddit</h1>
         </div>
     )
 }

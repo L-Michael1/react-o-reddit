@@ -7,11 +7,35 @@ import Header from '../header/Header'
 import Posts from '../posts/Posts';
 
 // Types/Interfaces
+type Resolution = {
+    height: number;
+    url: string;
+    width: number;
+}
+
+type Resolutions = Array<Resolution>
+
+type Image = {
+    id: string;
+    resolutions: Resolutions;
+    source: {
+        height: number;
+        url: string;
+        width: number;
+    }
+}
+
+type Images = Array<Image>
+
 type PostType = {
     id: string;
     kind: string;
     data: {
         title: string;
+        preview: {
+            enabled?: boolean;
+            images: Images
+        }
     };
 }
 
@@ -78,6 +102,7 @@ const RedditContainer = () => {
 
     const [url, setUrl] = useState(`https://www.reddit.com/r/${subreddit}`)
 
+    // On mount and on url change, fetch data
     const handleFetchPosts = useCallback(async () => {
         dispatchPosts({
             type: 'POSTS_FETCH_INIT'
