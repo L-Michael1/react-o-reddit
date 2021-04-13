@@ -6,6 +6,7 @@ import './RedditContainer.css'
 // Components
 import Header from '../header/Header'
 import Posts from '../posts/Posts';
+import Form from '../form/Form'
 
 // Types/Interfaces
 type PostType = {
@@ -82,13 +83,13 @@ const RedditContainer = () => {
     );
 
     // 'best', 'hot', 'new', 'top', 'controversial', 'rising'
-    const [listing, setListing] = useState('top');
+    const [listing, setListing] = useState('best');
 
     // Any subreddit
-    const [subreddit, setSubreddit] = useState(`wallpapers/${listing}.json?count=100`);
+    const [subreddit, setSubreddit] = useState(`wallpapers`);
 
     // Endpoint to fetch data in combination with user's chosen subreddit + listing type
-    const [url, setUrl] = useState(`https://www.reddit.com/r/${subreddit}`)
+    const API_ENDPOINT = `https://www.reddit.com/r/${subreddit}/${listing}.json`
 
     // On mount and on url change, fetch data
     const handleFetchPosts = useCallback(async () => {
@@ -96,7 +97,7 @@ const RedditContainer = () => {
             type: 'POSTS_FETCH_INIT'
         })
         try {
-            const result = await axios.get(url);
+            const result = await axios.get(API_ENDPOINT);
             const posts = result.data.data.children;
 
             posts.forEach((post: PostType) => {
@@ -111,23 +112,20 @@ const RedditContainer = () => {
             });
 
         } catch (err) {
+            console.log('why');
             console.error(err);
             dispatchPosts({
                 type: 'POSTS_FETCH_FAILED',
             })
         }
-    }, [url]);
+    }, [subreddit]);
 
     useEffect(() => {
         handleFetchPosts();
     }, [handleFetchPosts])
 
-    const handleUrlChange = (url: string) => {
-        setUrl(url);
-    }
-
-    const handleSearchChange = (subreddit: string) => {
-        setSubreddit(subreddit);
+    const handleSubmit = (sub: string) => {
+        setSubreddit(sub);
     }
 
     let subredditHeader = `r/${subreddit.split('/')[0]}`;
@@ -136,6 +134,7 @@ const RedditContainer = () => {
         <div className="container">
             <Header subreddit={subredditHeader} />
             <hr />
+            <Form handleSubmit={handleSubmit} />
             { posts.isLoading ? <p>Loading...</p> : <Posts posts={posts.data} />}
         </div >
     )
