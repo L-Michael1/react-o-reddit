@@ -25,14 +25,16 @@ const Post = ({ post, title }: PostProps) => {
         image = post.data.preview.images[0].resolutions[post.data.preview.images[0].resolutions.length - 1].url;
 
         // Replace keywords &amp to & - makes image a readable src
-        image = image.replace(/&amp;/g, "&");
+        image = image.replace(/&amp;/g, '&');
     }
 
     return (
-        <div>
-            {title}
-            <div>
-                <img src={image} width="25%vw" height="25%vw" />
+        <div className='d-flex justify-content-between col-lg-4'>
+            <div className='card'>
+                <img src={image} width='100%' alt={post.data.title} />
+                <div className='card-body'>
+                    <h5>{title}</h5>
+                </div>
             </div>
         </div>
     )

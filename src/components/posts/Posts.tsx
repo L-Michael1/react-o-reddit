@@ -18,19 +18,16 @@ interface PostsProps {
 
 const Posts = ({ posts }: PostsProps) => {
     return (
-        <div>
-            <ul>
-                {posts.map((post) => {
-                    return (
-                        <li key={post.id}>
-                            <Post
-                                post={post}
-                                title={post.data.title}
-                            />
-                        </li>
-                    )
-                })}
-            </ul>
+        <div className="row">
+            {posts.map((post) => {
+                return (
+                    <Post
+                        key={post.id}
+                        post={post}
+                        title={post.data.title}
+                    />
+                )
+            })}
         </div>
     )
 }

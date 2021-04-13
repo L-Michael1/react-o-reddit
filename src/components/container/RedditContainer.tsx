@@ -79,7 +79,7 @@ const RedditContainer = () => {
     const [listing, setListing] = useState('best');
 
     // Any subreddit
-    const [subreddit, setSubreddit] = useState(`awwwtf/${listing}.json`);
+    const [subreddit, setSubreddit] = useState(`wallpapers/${listing}.json`);
 
     // Endpoint to fetch data in combination with user's chosen subreddit + listing type
     const [url, setUrl] = useState(`https://www.reddit.com/r/${subreddit}`)
