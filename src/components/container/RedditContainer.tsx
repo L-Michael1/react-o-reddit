@@ -7,35 +7,12 @@ import Header from '../header/Header'
 import Posts from '../posts/Posts';
 
 // Types/Interfaces
-type Resolution = {
-    height: number;
-    url: string;
-    width: number;
-}
-
-type Resolutions = Array<Resolution>
-
-type Image = {
-    id: string;
-    resolutions: Resolutions;
-    source: {
-        height: number;
-        url: string;
-        width: number;
-    }
-}
-
-type Images = Array<Image>
-
 type PostType = {
     id: string;
-    kind: string;
+    kind: any;
     data: {
         title: string;
-        preview: {
-            enabled?: boolean;
-            images: Images
-        }
+        preview: any;
     };
 }
 
@@ -98,7 +75,9 @@ const RedditContainer = () => {
         { data: [], isLoading: false, isError: false }
     );
 
-    const [subreddit, setSubreddit] = useState('wallpapers/hot.json');
+    const [listing, setListing] = useState('hot');
+
+    const [subreddit, setSubreddit] = useState(`wallpapers/${listing}.json`);
 
     const [url, setUrl] = useState(`https://www.reddit.com/r/${subreddit}`)
 
