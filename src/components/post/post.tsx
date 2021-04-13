@@ -1,9 +1,15 @@
 import React from 'react';
 
-const Post = () => {
+interface PostProps {
+    title: string;
+}
+
+const Post = ({ title }: PostProps) => {
     return (
         <div>
-
+            <li>
+                {title}
+            </li>
         </div>
     )
 }

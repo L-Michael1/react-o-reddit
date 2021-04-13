@@ -4,18 +4,33 @@ import axios from 'axios'
 
 // Components
 import Header from '../header/Header'
+import Posts from '../posts/Posts';
+
+// Types/Interfaces
+
+type PostType = {
+    kind: string;
+    data: {
+        title: string;
+    };
+}
+
+type PostsType = Array<PostType>;
+
 
 const RedditContainer = () => {
 
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState<PostsType>([]);
 
-    const [url, setUrl] = useState('https://www.reddit.com/r/wallpapers/hot.json')
+    const [subreddit, setSubreddit] = useState('wallpapers/hot.json');
+
+    const [url, setUrl] = useState(`https://www.reddit.com/r/${subreddit}`)
 
     const handleFetchPosts = useCallback(async () => {
         try {
             const result = await axios.get(url);
             console.log(result.data.data.children)
-            setPosts(result.data.children);
+            setPosts(result.data.data.children);
         } catch (err) {
             console.error(err);
         }
@@ -29,9 +44,14 @@ const RedditContainer = () => {
         setUrl(url);
     }
 
+    const handleSearchChange = (subreddit: string) => {
+        setSubreddit(subreddit);
+    }
+
     return (
         <div>
             <Header />
+            <Posts posts={posts} />
         </div>
     )
 }
