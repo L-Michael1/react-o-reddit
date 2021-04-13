@@ -12,7 +12,11 @@ type PostType = {
     kind: any;
     data: {
         title: string;
+        author: string;
+        url: string;
+        permalink: string;
         preview: any;
+        over_18: any;
     };
 }
 
@@ -79,7 +83,7 @@ const RedditContainer = () => {
     const [listing, setListing] = useState('best');
 
     // Any subreddit
-    const [subreddit, setSubreddit] = useState(`wallpapers/${listing}.json`);
+    const [subreddit, setSubreddit] = useState(`wallpapers/${listing}.json?count=100`);
 
     // Endpoint to fetch data in combination with user's chosen subreddit + listing type
     const [url, setUrl] = useState(`https://www.reddit.com/r/${subreddit}`)
@@ -123,9 +127,11 @@ const RedditContainer = () => {
         setSubreddit(subreddit);
     }
 
+    let subredditHeader = `r/${subreddit.split('/')[0]}`;
+
     return (
-        <div>
-            <Header />
+        <div className="container">
+            <Header subreddit={subredditHeader} />
             {posts.isLoading ? <p>Loading...</p> : <Posts posts={posts.data} />}
         </div>
     )

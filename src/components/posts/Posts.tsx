@@ -6,7 +6,11 @@ type PostType = {
     kind: any;
     data: {
         title: string;
+        author: string;
+        url: string;
+        permalink: string;
         preview: any;
+        over_18: any;
     };
 }
 
