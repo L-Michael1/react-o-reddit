@@ -1,8 +1,9 @@
-import { AnyMxRecord } from 'node:dns';
 import React from 'react';
-import logo from '../../assets/reddit-logo2.png';
 import './Post.css'
+import logo from '../../assets/reddit-logo2.png';
 import nsfw from '../../assets/18plus.png';
+import upvote from '../../assets/reddit-upvote.png'
+import downvote from '../../assets/reddit-downvote.png'
 
 interface PostType {
     id: string;
@@ -14,6 +15,7 @@ interface PostType {
         permalink: string;
         preview: any;
         over_18: any;
+        score: number;
     };
 }
 
@@ -37,7 +39,7 @@ const Post = ({ post, title }: PostProps) => {
 
     return (
         <div className='d-flex align-items-end col-lg-4 p-3'>
-            <div className='card'>
+            <div className='card border-light'>
                 <div className='card-img-top'>
                     <a href={post.data.url} target="_blank" rel="noopener noreferrer">
                         {(post.data.over_18) ?
@@ -46,6 +48,18 @@ const Post = ({ post, title }: PostProps) => {
                     </a>
                 </div>
                 <div className='card-body'>
+                    <p className='d-flex align-items-center'>
+                        {
+                            post.data.score >= 0 ?
+                                <div className='d-flex'>
+                                    <img src={upvote} width="8%" height="8%" /> &nbsp;&nbsp;<p>{post.data.score}</p>
+                                </div>
+                                :
+                                <div className='d-flex'>
+                                    <img src={downvote} width="8%" height="8%" /> &nbsp;&nbsp;<p>{post.data.score}</p>
+                                </div>
+                        }
+                    </p>
                     <a className='card-link' href={`https://reddit.com${post.data.permalink}`}>{title}</a>
                     <p className='card-text'>{post.data.author}</p>
                 </div>

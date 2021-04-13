@@ -11,6 +11,8 @@ type PostType = {
         permalink: string;
         preview: any;
         over_18: any;
+        score: number;
+
     };
 }
 

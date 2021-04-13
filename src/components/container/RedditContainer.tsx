@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useReducer } from 'react';
-import axios from 'axios'
 import { v4 as uuid_v4 } from "uuid";
+import axios from 'axios'
+import './RedditContainer.css'
 
 // Components
 import Header from '../header/Header'
@@ -17,6 +18,7 @@ type PostType = {
         permalink: string;
         preview: any;
         over_18: any;
+        score: number;
     };
 }
 
@@ -79,8 +81,8 @@ const RedditContainer = () => {
         { data: [], isLoading: false, isError: false }
     );
 
-    // 'best', 'hot', 'new', 'top', 'controversial' 
-    const [listing, setListing] = useState('best');
+    // 'best', 'hot', 'new', 'top', 'controversial', 'rising'
+    const [listing, setListing] = useState('top');
 
     // Any subreddit
     const [subreddit, setSubreddit] = useState(`wallpapers/${listing}.json?count=100`);
@@ -101,7 +103,8 @@ const RedditContainer = () => {
                 post.id = uuid_v4();
             })
 
-            console.log(posts)
+            // console.log(posts)
+            console.log(result.data)
             dispatchPosts({
                 type: 'POSTS_FETCH_SUCCESS',
                 payload: posts
@@ -132,8 +135,9 @@ const RedditContainer = () => {
     return (
         <div className="container">
             <Header subreddit={subredditHeader} />
-            {posts.isLoading ? <p>Loading...</p> : <Posts posts={posts.data} />}
-        </div>
+            <hr />
+            { posts.isLoading ? <p>Loading...</p> : <Posts posts={posts.data} />}
+        </div >
     )
 }
 
