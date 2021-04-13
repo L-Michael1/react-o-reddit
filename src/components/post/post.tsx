@@ -1,4 +1,5 @@
 import React from 'react';
+import logo from '../../assets/reddit-logo2.png';
 
 interface PostType {
     id: string;
@@ -15,11 +16,24 @@ interface PostProps {
 }
 
 const Post = ({ post, title }: PostProps) => {
-    let previewImage = post.data.preview ? post.data.preview.images[0].resolutions[3].url : "http://dummyimage.com";
-    previewImage = previewImage.replace(/&amp;/g, "&");
+
+    // Default image if no images found
+    let image = logo;
+
+    if (post.data.preview && post.data.preview.images) {
+        // Get highest resolution image
+        image = post.data.preview.images[0].resolutions[post.data.preview.images[0].resolutions.length - 1].url;
+
+        // Replace keywords &amp to & - makes image a readable src
+        image = image.replace(/&amp;/g, "&");
+    }
+
     return (
         <div>
             {title}
+            <div>
+                <img src={image} width="25%vw" height="25%vw" />
+            </div>
         </div>
     )
 }

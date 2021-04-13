@@ -75,10 +75,13 @@ const RedditContainer = () => {
         { data: [], isLoading: false, isError: false }
     );
 
-    const [listing, setListing] = useState('hot');
+    // 'best', 'hot', 'new', 'top', 'controversial' 
+    const [listing, setListing] = useState('best');
 
-    const [subreddit, setSubreddit] = useState(`wallpapers/${listing}.json`);
+    // Any subreddit
+    const [subreddit, setSubreddit] = useState(`awwwtf/${listing}.json`);
 
+    // Endpoint to fetch data in combination with user's chosen subreddit + listing type
     const [url, setUrl] = useState(`https://www.reddit.com/r/${subreddit}`)
 
     // On mount and on url change, fetch data
