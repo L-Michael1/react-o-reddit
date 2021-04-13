@@ -10,11 +10,15 @@ import Form from '../form/Form';
 import Footer from '../footer/Footer';
 import errorReddit from '../../assets/errorReddit.png';
 import loading from '../../assets/loading.png';
+import emptyReddit from '../../assets/emptyReddit.jpg';
+import { stat } from 'node:fs';
 
 // Types/Interfaces
 type PostType = {
     id: string;
     kind: any;
+    after: any;
+    before: any;
     data: {
         title: string;
         author: string;
@@ -30,6 +34,9 @@ type PostsType = Array<PostType>;
 
 type PostsState = {
     data: PostsType;
+    page: number;
+    before: any;
+    after: any;
     isLoading: boolean;
     isError: boolean;
 };
@@ -43,6 +50,11 @@ interface PostsFetchSuccessAction {
     payload: PostsType;
 }
 
+interface PostsFetchPreviousSuccessAction {
+    type: 'POSTS_FETCH_PREVIOUS_SUCCESS';
+    payload: PostsType;
+}
+
 interface PostsFetchFailedAction {
     type: 'POSTS_FETCH_FAILED';
 }
@@ -50,7 +62,8 @@ interface PostsFetchFailedAction {
 type PostsActions =
     | PostsFetchInitAction
     | PostsFetchSuccessAction
-    | PostsFetchFailedAction;
+    | PostsFetchFailedAction
+    | PostsFetchPreviousSuccessAction;
 
 const postsReducer = (state: PostsState, action: PostsActions) => {
     switch (action.type) {
@@ -63,6 +76,19 @@ const postsReducer = (state: PostsState, action: PostsActions) => {
         case 'POSTS_FETCH_SUCCESS':
             return {
                 ...state,
+                page: state.page + 1,
+                before: action.payload[0].before,
+                after: action.payload[0].after,
+                isLoading: false,
+                isError: false,
+                data: action.payload,
+            }
+        case 'POSTS_FETCH_PREVIOUS_SUCCESS':
+            return {
+                ...state,
+                page: state.page - 1,
+                before: action.payload[0].before,
+                after: action.payload[0].after,
                 isLoading: false,
                 isError: false,
                 data: action.payload,
@@ -82,7 +108,14 @@ const RedditContainer = () => {
 
     const [posts, dispatchPosts] = useReducer(
         postsReducer,
-        { data: [], isLoading: false, isError: false }
+        {
+            data: [],
+            page: 0,
+            after: null,
+            before: null,
+            isLoading: false,
+            isError: false,
+        }
     );
 
     // 'best', 'hot', 'new', 'top', 'controversial', 'rising'
@@ -102,16 +135,15 @@ const RedditContainer = () => {
         try {
             const result = await axios.get(API_ENDPOINT);
             const posts = result.data.data.children;
-
             posts.forEach((post: PostType) => {
                 post.id = uuid_v4();
+                post.after = result.data.data.after;
+                post.before = result.data.data.before;
             })
 
-            // console.log(posts)
-            console.log(result.data)
             dispatchPosts({
                 type: 'POSTS_FETCH_SUCCESS',
-                payload: posts
+                payload: posts,
             });
 
         } catch (err) {
@@ -133,6 +165,57 @@ const RedditContainer = () => {
     const handleSubmit = (sub: string) => {
         setSubreddit(sub);
     }
+    // https://www.reddit.com/r/${subreddit}/${listing}.json
+    // https://www.reddit.com/r/wallpapers/best.json
+
+    const handleNextPage = async () => {
+        dispatchPosts({
+            type: 'POSTS_FETCH_INIT'
+        })
+        try {
+            const result = await axios.get(`${API_ENDPOINT}?&after=${posts.after}`);
+            const newPosts = result.data.data.children;
+
+            newPosts.forEach((post: PostType) => {
+                post.id = uuid_v4();
+                post.after = result.data.data.after;
+                post.before = result.data.data.before;
+            })
+
+            dispatchPosts({
+                type: 'POSTS_FETCH_SUCCESS',
+                payload: newPosts
+            })
+            window.scrollTo(0, 0);
+
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    const handlePrevPage = async () => {
+        dispatchPosts({
+            type: 'POSTS_FETCH_INIT'
+        })
+        try {
+            const result = await axios.get(`${API_ENDPOINT}?&before=${posts.before}`);
+            const newPosts = result.data.data.children;
+
+            newPosts.forEach((post: PostType) => {
+                post.id = uuid_v4();
+                post.after = result.data.data.after;
+                post.before = result.data.data.before;
+            })
+
+            dispatchPosts({
+                type: 'POSTS_FETCH_PREVIOUS_SUCCESS',
+                payload: newPosts
+            })
+            window.scrollTo(0, 0);
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     let subredditHeader = `r/${subreddit.split('/')[0]}`;
 
@@ -141,13 +224,24 @@ const RedditContainer = () => {
             <Header subreddit={subredditHeader} />
             <hr />
             <Form listing={listing} handleSubmit={handleSubmit} handleListing={handleListingChange} />
-            {console.log(posts.isError)}
-            { posts.isLoading ?
-                <img className='rounded d-block mx-auto ' height='50%' src={loading} alt='loading' /> : posts.isError ?
-                    <img className='rounded d-block mx-auto ' src={errorReddit} alt='error' /> :
-                    posts.data.length === 0 ? <h1 className='d-flex justify-content-center'>No posts...</h1> :
-                        <Posts posts={posts.data} />
+            {
+                posts.isLoading ?
+                    <img className='rounded d-block mx-auto ' height='50%' src={loading} alt='loading' /> : posts.isError ?
+                        <img className='rounded d-block mx-auto ' src={errorReddit} alt='error' /> :
+                        posts.data.length === 0 ? <img className='rounded d-block mx-auto ' src={emptyReddit} alt='empty' /> :
+                            <Posts posts={posts.data} />
             }
+            <div className='d-flex justify-content-center'>
+
+                {posts.page !== 1 ?
+                    <div className='mr-2'>
+                        <button className='btn-lg btn-primary' onClick={handlePrevPage}>Prev</button>
+                    </div> : null}
+
+                <div>
+                    <button className='btn-lg btn-primary' onClick={handleNextPage}>Next</button>
+                </div>
+            </div>
             <Footer />
         </div >
     )
