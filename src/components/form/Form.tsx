@@ -19,6 +19,8 @@ const Form = ({ handleSubmit, handleListing, listing }: FormProps) => {
         handleSubmit(subreddit);
     }
 
+    const listings = ['best', 'hot', 'new', 'top', 'rising'];
+
     return (
         <div className='container'>
             <div className='row justify-content-md-center m-4'>
@@ -30,11 +32,9 @@ const Form = ({ handleSubmit, handleListing, listing }: FormProps) => {
                                     {listing}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
-                                    <Dropdown.Item onClick={() => handleListing('best')}>best</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => handleListing('hot')}>hot</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => handleListing('new')}>new</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => handleListing('top')}>top</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => handleListing('rising')}>rising</Dropdown.Item>
+                                    {listings.map((listing) => {
+                                        return <Dropdown.Item onClick={() => handleListing(listing)}>{listing}</Dropdown.Item>
+                                    })}
                                 </Dropdown.Menu>
                             </Dropdown>
                         </div>

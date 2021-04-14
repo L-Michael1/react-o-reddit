@@ -50,6 +50,11 @@ interface PostsFetchSuccessAction {
     payload: PostsType;
 }
 
+interface PostsFetchNextSuccessAction {
+    type: 'POSTS_FETCH_NEXT_SUCCESS';
+    payload: PostsType;
+}
+
 interface PostsFetchPreviousSuccessAction {
     type: 'POSTS_FETCH_PREVIOUS_SUCCESS';
     payload: PostsType;
@@ -63,7 +68,8 @@ type PostsActions =
     | PostsFetchInitAction
     | PostsFetchSuccessAction
     | PostsFetchFailedAction
-    | PostsFetchPreviousSuccessAction;
+    | PostsFetchPreviousSuccessAction
+    | PostsFetchNextSuccessAction;
 
 const postsReducer = (state: PostsState, action: PostsActions) => {
     switch (action.type) {
@@ -74,6 +80,15 @@ const postsReducer = (state: PostsState, action: PostsActions) => {
                 isError: false,
             }
         case 'POSTS_FETCH_SUCCESS':
+            return {
+                ...state,
+                before: action.payload[0].before,
+                after: action.payload[0].after,
+                isLoading: false,
+                isError: false,
+                data: action.payload,
+            }
+        case 'POSTS_FETCH_NEXT_SUCCESS':
             return {
                 ...state,
                 page: state.page + 1,
@@ -124,6 +139,10 @@ const RedditContainer = () => {
     // Any subreddit
     const [subreddit, setSubreddit] = useState(`wallpapers`);
 
+    useEffect(() => {
+        posts.page = 1;
+    }, [listing, subreddit]);
+
     // Endpoint to fetch data in combination with user's chosen subreddit + listing type
     const API_ENDPOINT = `https://www.reddit.com/r/${subreddit}/${listing}.json`
 
@@ -152,7 +171,7 @@ const RedditContainer = () => {
                 type: 'POSTS_FETCH_FAILED',
             })
         }
-    }, [listing, subreddit]);
+    }, [API_ENDPOINT]);
 
     useEffect(() => {
         handleFetchPosts();
@@ -183,7 +202,7 @@ const RedditContainer = () => {
             })
 
             dispatchPosts({
-                type: 'POSTS_FETCH_SUCCESS',
+                type: 'POSTS_FETCH_NEXT_SUCCESS',
                 payload: newPosts
             })
             window.scrollTo(0, 0);
@@ -241,6 +260,9 @@ const RedditContainer = () => {
                 <div>
                     <button className='btn-lg btn-primary' onClick={handleNextPage}>Next</button>
                 </div>
+            </div>
+            <div className='d-flex justify-content-center mt-2'>
+                <p>{posts.page}</p>
             </div>
             <Footer />
         </div >

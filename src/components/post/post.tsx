@@ -52,15 +52,15 @@ const Post = ({ post, title }: PostProps) => {
                         {
                             post.data.score >= 0 ?
                                 <div className='d-flex'>
-                                    <img src={upvote} width="8%" height="8%" /> &nbsp;&nbsp;<p>{post.data.score}</p>
+                                    <img src={upvote} width="8%" height="8%" alt='upvote' /> &nbsp;&nbsp;<p>{post.data.score}</p>
                                 </div>
                                 :
                                 <div className='d-flex'>
-                                    <img src={downvote} width="8%" height="8%" /> &nbsp;&nbsp;<p>{post.data.score}</p>
+                                    <img src={downvote} width="8%" height="8%" alt='downvote' /> &nbsp;&nbsp;<p>{post.data.score}</p>
                                 </div>
                         }
                     </p>
-                    <a className='card-link' target='_blank' href={`https://reddit.com${post.data.permalink}`}>{title}</a>
+                    <a className='card-link' target='_blank' rel="noopener noreferrer" href={`https://reddit.com${post.data.permalink}`}>{title}</a>
                     <p className='card-text'>By: {post.data.author}</p>
                 </div>
             </div>
