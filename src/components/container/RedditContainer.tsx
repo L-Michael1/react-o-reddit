@@ -139,6 +139,7 @@ const RedditContainer = () => {
     // Any subreddit
     const [subreddit, setSubreddit] = useState(`wallpapers`);
 
+    // Reset page number on listing/subreddit changes
     useEffect(() => {
         posts.page = 1;
     }, [listing, subreddit]);
@@ -181,11 +182,13 @@ const RedditContainer = () => {
         setListing(listing);
     }
 
+    const handleSubredditChange = (sub: string) => {
+        setSubreddit(sub);
+    }
+
     const handleSubmit = (sub: string) => {
         setSubreddit(sub);
     }
-    // https://www.reddit.com/r/${subreddit}/${listing}.json
-    // https://www.reddit.com/r/wallpapers/best.json
 
     const handleNextPage = async () => {
         dispatchPosts({
@@ -242,7 +245,7 @@ const RedditContainer = () => {
         <div className="container">
             <Header subreddit={subredditHeader} />
             <hr />
-            <Form listing={listing} handleSubmit={handleSubmit} handleListing={handleListingChange} />
+            <Form listing={listing} handleSubmit={handleSubmit} handleListing={handleListingChange} handleSubreddit={handleSubredditChange} />
             {
                 posts.isLoading ?
                     <img className='rounded d-block mx-auto ' height='50%' src={loading} alt='loading' /> : posts.isError ?
