@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import { v4 as uuid_v4 } from "uuid";
 import Dropdown from 'react-bootstrap/Dropdown';
+
+
 interface FormProps {
     listing: string;
     handleSubmit: (e: any) => void;
@@ -35,7 +38,7 @@ const Form = ({ handleSubmit, handleListing, handleSubreddit, listing }: FormPro
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
                                     {subreddits.map((subreddit) => {
-                                        return <Dropdown.Item onClick={() => handleSubreddit(subreddit)}>{subreddit}</Dropdown.Item>
+                                        return <Dropdown.Item key={uuid_v4()} onClick={() => handleSubreddit(subreddit)}>{subreddit}</Dropdown.Item>
                                     })}
                                 </Dropdown.Menu>
                             </Dropdown>
@@ -47,7 +50,7 @@ const Form = ({ handleSubmit, handleListing, handleSubreddit, listing }: FormPro
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
                                     {listings.map((listing) => {
-                                        return <Dropdown.Item onClick={() => handleListing(listing)}>{listing}</Dropdown.Item>
+                                        return <Dropdown.Item key={uuid_v4()} onClick={() => handleListing(listing)}>{listing}</Dropdown.Item>
                                     })}
                                 </Dropdown.Menu>
                             </Dropdown>

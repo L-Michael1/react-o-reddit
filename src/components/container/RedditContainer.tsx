@@ -11,7 +11,6 @@ import Footer from '../footer/Footer';
 import errorReddit from '../../assets/errorReddit.png';
 import loading from '../../assets/loading.png';
 import emptyReddit from '../../assets/emptyReddit.jpg';
-import { stat } from 'node:fs';
 
 // Types/Interfaces
 type PostType = {
@@ -82,6 +81,7 @@ const postsReducer = (state: PostsState, action: PostsActions) => {
         case 'POSTS_FETCH_SUCCESS':
             return {
                 ...state,
+                page: 1,
                 before: action.payload[0].before,
                 after: action.payload[0].after,
                 isLoading: false,
@@ -138,11 +138,6 @@ const RedditContainer = () => {
 
     // Any subreddit
     const [subreddit, setSubreddit] = useState(`wallpapers`);
-
-    // Reset page number on listing/subreddit changes
-    useEffect(() => {
-        posts.page = 1;
-    }, [listing, subreddit]);
 
     // Endpoint to fetch data in combination with user's chosen subreddit + listing type
     const API_ENDPOINT = `https://www.reddit.com/r/${subreddit}/${listing}.json`
