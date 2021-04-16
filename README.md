@@ -1,7 +1,13 @@
 # react-o-reddit
 
 - An application that makes use of Reddit's API to display posts of a desired subreddit. 
-- Built with React, TypeScript, and styled with Bootstrap
+
+## Technologies
+
+- **React**
+- **TypeScript**
+- **Bootstrap**
+- Deployed with **Netlify**
 
 ## Preview
 
