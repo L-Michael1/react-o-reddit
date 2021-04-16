@@ -1,6 +1,7 @@
 # react-o-reddit
 
 - An application that makes use of Reddit's API to display posts of a desired subreddit. 
+- https://react-o-reddit.netlify.app/
 
 ## Technologies
 
