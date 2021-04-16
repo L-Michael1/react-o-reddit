@@ -91,6 +91,7 @@ const postsReducer = (state: PostsState, action: PostsActions) => {
         case 'POSTS_FETCH_NEXT_SUCCESS':
             return {
                 ...state,
+                
                 page: state.page + 1,
                 before: action.payload[0].before,
                 after: action.payload[0].after,
