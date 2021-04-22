@@ -19,8 +19,3 @@
 ![Screenshot_2](https://user-images.githubusercontent.com/27537005/115064647-2b739480-9ebb-11eb-8dd9-e392741f9e0c.png)
 
 ![Screenshot_1](https://user-images.githubusercontent.com/27537005/115064654-2ca4c180-9ebb-11eb-8003-6ee6eb05b4d8.png)
-
-# npm start
-
-Runs the app in the development mode.
-Open http://localhost:3000 to view it in the browser.
