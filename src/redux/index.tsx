@@ -1,0 +1,1 @@
+export { fetchPosts, fetchNextPosts, fetchPrevPosts } from './post/postActions'
