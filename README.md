@@ -5,7 +5,7 @@
 
 ## Technologies
 
-- **React**
+- **React + Redux**
 - **TypeScript**
 - **Bootstrap**
 - Deployed with **Netlify**
