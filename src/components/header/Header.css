@@ -3,3 +3,8 @@ h1 {
     font-weight: 550;
     font-size: 50%vw;
 }
+
+.header {
+    padding-bottom: 15px;
+    border-bottom: 1px solid whitesmoke;
+}

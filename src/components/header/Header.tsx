@@ -9,7 +9,7 @@ interface HeaderProps {
 const Header = ({ subreddit }: HeaderProps) => {
     return (
         <div className='header'>
-            <a href='https://reddit.com' target='_blank' rel="noopener noreferrer"><img className='d-block mx-auto mt-3' width='5%' src={reddit} alt='reddit'></img></a>
+            <a href='https://reddit.com' target='_blank' rel="noopener noreferrer"><img className='d-block mx-auto pt-3 pb-3' style={{ width: '100%', maxWidth: '100px', height: 'auto' }} src={reddit} alt='reddit'></img></a>
             <h1 className="d-flex justify-content-center">React-O-Reddit</h1>
             <h1 className="d-flex justify-content-center">{subreddit}</h1>
         </div>

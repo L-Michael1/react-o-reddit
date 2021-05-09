@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './RedditContainer.css';
+import { CircularProgress } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles'
 
 // Redux
 import { useSelector, useDispatch } from 'react-redux'
@@ -12,13 +14,22 @@ import Posts from '../posts/Posts';
 import Form from '../form/Form';
 import Footer from '../footer/Footer';
 import errorReddit from '../../assets/errorReddit.png';
-import loading from '../../assets/loading.png';
 import emptyReddit from '../../assets/emptyReddit.jpg';
+
+
+const useStyles = makeStyles({
+    loading: {
+        display: 'flex',
+        margin: 'auto',
+        padding: '20px 20px'
+    }
+});
 
 const RedditContainer = () => {
 
     const posts = useSelector((state: RootState) => state.posts)
     const dispatch = useDispatch();
+    const styles = useStyles();
 
     // 'best', 'hot', 'new', 'top', 'controversial', 'rising'
     const [listing, setListing] = useState('best');
@@ -58,11 +69,10 @@ const RedditContainer = () => {
     return (
         <div className="container">
             <Header subreddit={subredditHeader} />
-            <hr />
             <Form listing={listing} handleSubmit={handleSubmit} handleListing={handleListingChange} handleSubreddit={handleSubredditChange} />
             {
                 posts.isLoading ?
-                    <img className='rounded d-block mx-auto ' height='50%' src={loading} alt='loading' /> : posts.isError ?
+                    <CircularProgress size={100} className={styles.loading} /> : posts.isError ?
                         <img className='rounded d-block mx-auto ' src={errorReddit} alt='error' /> :
                         posts.data.length === 0 ? <img className='rounded d-block mx-auto ' src={emptyReddit} alt='empty' /> :
                             <Posts posts={posts.data} />
